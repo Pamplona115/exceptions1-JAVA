@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import model.exceção.CheckException;
+
 public class reserva {
 	private Integer quartos;
 	private Date ci;
@@ -12,11 +14,12 @@ public class reserva {
 	private static SimpleDateFormat sdf = new SimpleDateFormat ("dd/MM/yyyy");
 	
 	public reserva() {
-		super();
 	}
 
-	public reserva(Integer quartos, Date checkin, Date checkout) {
-		super();
+	public reserva(Integer quartos, Date checkin, Date checkout) throws CheckException {
+		if (!co.after(ci)) {
+			throw new CheckException("ERRO: Check-Out deve ser depois do Check-In.") ;
+		}
 		this.quartos = quartos;
 		this.ci = checkin;
 		this.co = checkout;
@@ -43,19 +46,16 @@ public class reserva {
 		return TimeUnit.DAYS.convert(d, TimeUnit.MILLISECONDS);	
 	}
 	
-	public String update(Date checkin, Date checkout) {
-		
+	public void update(Date checkin, Date checkout) throws CheckException {
 		Date agr = new Date();
 		if (ci.before(agr) || co.before(agr)) {
-			return "ERRO: As datas não são atuais.";
+			throw new CheckException("ERRO: As datas não são atuais.");
 		} 
 		if (!co.after(ci)) {
-			return "ERRO: Check-Out deve ser depois do Check-In.";
+			throw new CheckException("ERRO: Check-Out deve ser depois do Check-In.") ;
 		}
-		
 		this.ci = checkin;
 		this.co = checkout;
-		return null;
 	}
 
 	@Override

@@ -33,18 +33,15 @@ public class hotel {
 			ci = sdf.parse(sc.next());
 			System.out.print("Check=out(dd/mm/aaaa): ");
 			co = sdf.parse(sc.next());
-			Date agr = new Date();
-			if (ci.before(agr) || co.before(agr)) {
-				System.out.println("ERRO: As datas não são atuais.");
-			} 
-			else if (!co.after(ci)) {
-				System.out.println("ERRO: Check-Out deve ser depois do Check-In.");
+			
+			String error = r.update(ci, co);
+			if (error != null) {
+				System.out.println(error);
 			}
 			else {
-				r.update(ci, co);
-				System.out.println(r);
+			System.out.println(r);
 			}
-
+			
 		}
 
 		sc.close();

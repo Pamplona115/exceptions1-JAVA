@@ -6,8 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 public class reserva {
 	private Integer quartos;
-	private Date checkin;
-	private Date checkout;
+	private Date ci;
+	private Date co;
 	
 	private static SimpleDateFormat sdf = new SimpleDateFormat ("dd/MM/yyyy");
 	
@@ -18,8 +18,8 @@ public class reserva {
 	public reserva(Integer quartos, Date checkin, Date checkout) {
 		super();
 		this.quartos = quartos;
-		this.checkin = checkin;
-		this.checkout = checkout;
+		this.ci = checkin;
+		this.co = checkout;
 	}
 
 	public Integer getQuartos() {
@@ -31,21 +31,31 @@ public class reserva {
 	}
 
 	public Date getCheckin() {
-		return checkin;
+		return ci;
 	}
 
 	public Date getCheckout() {
-		return checkout;
+		return co;
 	}
 	
 	public long duração(){
-		long d = checkout.getTime()-checkin.getTime();
+		long d = co.getTime()-ci.getTime();
 		return TimeUnit.DAYS.convert(d, TimeUnit.MILLISECONDS);	
 	}
 	
-	public void update(Date checkin, Date checkout) {
-		this.checkin = checkin;
-		this.checkout = checkout;
+	public String update(Date checkin, Date checkout) {
+		
+		Date agr = new Date();
+		if (ci.before(agr) || co.before(agr)) {
+			return "ERRO: As datas não são atuais.";
+		} 
+		if (!co.after(ci)) {
+			return "ERRO: Check-Out deve ser depois do Check-In.";
+		}
+		
+		this.ci = checkin;
+		this.co = checkout;
+		return null;
 	}
 
 	@Override
@@ -53,9 +63,9 @@ public class reserva {
 		return "quarto "
 				+ quartos
 				+", check-in: "
-				+ sdf.format(checkin)
+				+ sdf.format(ci)
 				+", check-out: "
-				+ sdf.format(checkout)
+				+ sdf.format(co)
 				+", "
 				+duração()
 				+" noites";
